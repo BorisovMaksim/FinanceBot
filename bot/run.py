@@ -5,6 +5,7 @@ from dff.pipeline import Pipeline
 
 from dialog_graph import script
 from pipeline_services import pre_services
+from dotenv import load_dotenv
 
 
 def get_pipeline(use_cli_interface: bool = False) -> Pipeline:
@@ -33,5 +34,6 @@ def get_pipeline(use_cli_interface: bool = False) -> Pipeline:
 
 
 if __name__ == "__main__":
+    load_dotenv()
     pipeline = get_pipeline()
     pipeline.run()
