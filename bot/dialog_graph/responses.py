@@ -30,6 +30,8 @@ def suggest_similar_questions(ctx: Context, _: Pipeline):
             text="I don't have an answer to that question. Here's a list of questions I know an answer to:",
             ui=TelegramUI(buttons=[Button(text=q, payload=q) for q in faq]),
         )
+    elif similar_questions[0] == 'Сколько стоит акция компании?':
+        return TelegramMessage(text=last_request.annotations['answer'], parse_mode=ParseMode.HTML)
     else:
         return TelegramMessage(
             text="I found similar questions in my database:",
