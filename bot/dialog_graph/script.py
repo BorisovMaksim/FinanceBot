@@ -7,7 +7,7 @@ from dff.script import RESPONSE, TRANSITIONS, LOCAL
 import dff.script.conditions as cnd
 from dff.messengers.telegram import TelegramMessage
 
-from .responses import answer_question, suggest_similar_questions
+from .responses import answer_question
 from .conditions import received_button_click, received_text
 
 script = {
@@ -23,18 +23,19 @@ script = {
     "qa_flow": {
         LOCAL: {
             TRANSITIONS: {
-                ("qa_flow", "suggest_questions"): received_text,
-                ("qa_flow", "answer_question"): received_button_click,
+                ("qa_flow", "answer_question"): received_text,
+                # ("qa_flow", "answer_question"): received_button_click,
             },
         },
         "welcome_node": {
-            RESPONSE: TelegramMessage(text="Welcome! Ask me questions about Finance."),
-        },
-        "suggest_questions": {
-            RESPONSE: suggest_similar_questions,
+            RESPONSE: TelegramMessage(text="Привет! Задай вопрос о финансах."),
         },
         "answer_question": {
             RESPONSE: answer_question,
+            TRANSITIONS: {("qa_flow", "welcome_node"): cnd.exact_match(TelegramMessage(text="/restart"))},
         },
+        # "answer_question": {
+        #     RESPONSE: answer_question,
+        # },
     },
 }

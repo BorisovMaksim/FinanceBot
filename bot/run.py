@@ -5,6 +5,7 @@ from dff.pipeline import Pipeline
 
 from dialog_graph import script
 from pipeline_services import pre_services
+from dff.context_storages import context_storage_factory
 from dotenv import load_dotenv
 
 
@@ -20,6 +21,18 @@ def get_pipeline(use_cli_interface: bool = False) -> Pipeline:
             "Telegram token (`TG_BOT_TOKEN`) is not set. `TG_BOT_TOKEN` can be set via `.env` file."
             " For more info see README.md."
         )
+    postgresql_envs =  ["POSTGRES_USERNAME", "POSTGRES_PASSWORD", "POSTGRES_DB"] 
+    if any([env not in  os.environ  for env in postgresql_envs]):
+        raise RuntimeError(
+            f"Postgresql tokens (`{postgresql_envs}`) are not set"
+        )
+        
+    db_uri = "postgresql+asyncpg://{}:{}@localhost:5432/{}".format(
+        os.environ["POSTGRES_USERNAME"],
+        os.environ["POSTGRES_PASSWORD"],
+        os.environ["POSTGRES_DB"],
+)
+    db = context_storage_factory(db_uri)
 
     pipeline = Pipeline.from_script(
         script=script.script,
@@ -28,6 +41,7 @@ def get_pipeline(use_cli_interface: bool = False) -> Pipeline:
         messenger_interface=messenger_interface,
         # pre-services run before bot sends a response
         pre_services=pre_services.services,
+        context_storage=db
     )
 
     return pipeline
