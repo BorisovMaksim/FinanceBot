@@ -26,6 +26,7 @@ def find_similar_questions(question: str):
 
     result = []
     for question, score in filtered_embeddings:
+        print(question, score)        
         question = question.removeprefix("<Q>")
         result.append(question)
     return result

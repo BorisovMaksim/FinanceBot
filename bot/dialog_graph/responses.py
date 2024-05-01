@@ -12,7 +12,7 @@ from dff.messengers.telegram import TelegramMessage, TelegramUI, ParseMode
 from faq_model.model import faq
 
 
-def suggest_similar_questions(ctx: Context, _: Pipeline):
+def answer_question(ctx: Context, _: Pipeline):
     """Suggest questions similar to user's query by showing buttons with those questions."""
     if ctx.validation:  # this function requires non-empty fields and cannot be used during script validation
         return TelegramMessage()
@@ -27,25 +27,28 @@ def suggest_similar_questions(ctx: Context, _: Pipeline):
 
     if len(similar_questions) == 0:  # question is not similar to any questions
         return TelegramMessage(
-            text="I don't have an answer to that question. Here's a list of questions I know an answer to:",
-            ui=TelegramUI(buttons=[Button(text=q, payload=q) for q in faq]),
+            text="Вопрос слишком сложный...", parse_mode=ParseMode.HTML
         )
+    elif similar_questions[0] == 'Сколько стоит акция компании?':
+        return TelegramMessage(text=last_request.annotations['answer'], parse_mode=ParseMode.HTML)
     else:
-        return TelegramMessage(
-            text="I found similar questions in my database:",
-            ui=TelegramUI(buttons=[Button(text=q, payload=q) for q in similar_questions]),
-        )
+        return TelegramMessage(text=faq[similar_questions[0]], parse_mode=ParseMode.HTML)
+    
+        # return TelegramMessage(
+        #     text="Вас интересует один из этих вопросов?:",
+        #     ui=TelegramUI(buttons=[Button(text=q, payload=q) for q in similar_questions]),
+        # )
 
 
-def answer_question(ctx: Context, _: Pipeline):
-    """Answer a question asked by a user by pressing a button."""
-    if ctx.validation:  # this function requires non-empty fields and cannot be used during script validation
-        return TelegramMessage()
-    last_request = ctx.last_request
-    if last_request is None:
-        raise RuntimeError("No last requests.")
-    last_request = cast(TelegramMessage, last_request)
-    if last_request.callback_query is None:
-        raise RuntimeError("No callback query")
+# def answer_question(ctx: Context, _: Pipeline):
+#     """Answer a question asked by a user by pressing a button."""
+#     if ctx.validation:  # this function requires non-empty fields and cannot be used during script validation
+#         return TelegramMessage()
+#     last_request = ctx.last_request
+#     if last_request is None:
+#         raise RuntimeError("No last requests.")
+#     last_request = cast(TelegramMessage, last_request)
+#     if last_request.callback_query is None:
+#         raise RuntimeError("No callback query")
 
-    return TelegramMessage(text=faq[last_request.callback_query], parse_mode=ParseMode.HTML)
+#     return TelegramMessage(text=faq[last_request.callback_query], parse_mode=ParseMode.HTML)
