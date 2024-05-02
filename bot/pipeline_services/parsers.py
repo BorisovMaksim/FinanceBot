@@ -2,6 +2,7 @@ import os
 from tinkoff.invest import Client
 from tinkoff.invest.schemas import InstrumentType
 import yahooquery as yq
+import numpy as np
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -29,6 +30,12 @@ def get_last_price_yahoo(query):
         price = ticker.summary_detail[symbol]['bid']
         return price, exchange
     
+    
+def get_all_companies_names():
+    with Client(TOKEN) as client:   
+        shares = client.instruments.shares()
+    names = list({x.name for x in shares.instruments})
+    return names
     
 def get_last_price_tinkoff(query):
     with Client(TOKEN) as client:   
