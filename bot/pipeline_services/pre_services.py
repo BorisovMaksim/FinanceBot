@@ -32,8 +32,8 @@ def question_processor(ctx: Context):
             print(f"{similar_questions=}")
             if len(similar_questions) > 0 and similar_questions[0] ==  'Сколько стоит акция компании?':
                 company_name = get_company_name(last_request.text)
-                price = get_last_price_tinkoff(company_name)
-                last_request.annotations["answer"] = f"Цена акции {company_name} = {price}"
+                price, share = get_last_price_tinkoff(company_name)
+                last_request.annotations["answer"] = f"Цена акции {share.name} = {price}"
             last_request.annotations["similar_questions"] = similar_questions
             
     ctx.last_request = last_request

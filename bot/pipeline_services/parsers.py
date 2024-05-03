@@ -44,12 +44,12 @@ def get_last_price_tinkoff(query):
             last_prices = client.market_data.get_last_prices(figi=[share.figi]).last_prices[0]
             if last_prices.price.units != 0:
                 price = float(f"{last_prices.price.units}.{last_prices.price.nano}")
-                return price
+                return price, share
                             
                 
 if __name__ == '__main__':
     query = "Яндекс"
-    price = get_last_price_tinkoff(query)
+    price, _ = get_last_price_tinkoff(query)
     print(query, price)
     
     query = "google"
