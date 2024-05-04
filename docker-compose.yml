@@ -1,8 +1,25 @@
-version: "2"
+version: '3'
+
 services:
-    bot:
-        build:
-            context: bot/
-        volumes:
-            - ./bot/:/app:ro
-        env_file: .env
+  your_service:
+    build: .
+    environment:
+      - TG_BOT_TOKEN=${TG_BOT_TOKEN}
+      - TINKOFF_TOKEN=${TINKOFF_TOKEN}
+      - POSTGRES_DB=recommends_db
+      - POSTGRES_USER=user1
+      - POSTGRES_PASSWORD=password1
+    depends_on:
+      - postgres_db
+
+  postgres_db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_DB=recommends_db
+      - POSTGRES_USER=user1
+      - POSTGRES_PASSWORD=password1
+    ports:
+      - "5432:5432"
+    volumes:
+      - /bot/sql/:/docker-entrypoint-initdb.d
