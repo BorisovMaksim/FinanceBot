@@ -10,6 +10,13 @@ from dff.pipeline import Pipeline
 from dff.script.core.message import Button
 from dff.messengers.telegram import TelegramMessage, TelegramUI, ParseMode
 from faq_model.model import faq
+from dialog_graph.llm import init_model, create_nodes, response
+from dialog_graph.generate import response as response_all
+
+index, llm = init_model()
+
+
+
 
 
 def answer_question(ctx: Context, _: Pipeline):
@@ -26,11 +33,13 @@ def answer_question(ctx: Context, _: Pipeline):
         raise RuntimeError("Last request has no text.")
 
     if len(similar_questions) == 0:  # question is not similar to any questions
+        answer = response(last_request.text, index)
         return TelegramMessage(
-            text="Вопрос слишком сложный...", parse_mode=ParseMode.HTML
+            text=f"{answer}", parse_mode=ParseMode.HTML
         )
     elif similar_questions[0] == 'Сколько стоит акция компании?':
-        return TelegramMessage(text=last_request.annotations['answer'], parse_mode=ParseMode.HTML)
+        answer = response(last_request.text, index)
+        return TelegramMessage(text=answer, parse_mode=ParseMode.HTML)
     else:
         return TelegramMessage(text=faq[similar_questions[0]], parse_mode=ParseMode.HTML)
     

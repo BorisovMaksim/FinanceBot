@@ -28,10 +28,10 @@ def get_pipeline(use_cli_interface: bool = False) -> Pipeline:
         )
         
     db_uri = "postgresql+asyncpg://{}:{}@localhost:5432/{}".format(
-        os.environ["POSTGRES_USERNAME"],
-        os.environ["POSTGRES_PASSWORD"],
-        os.environ["POSTGRES_DB"],
-)
+        os.getenv("POSTGRES_USERNAME"),
+        os.getenv("POSTGRES_PASSWORD"),
+        os.getenv("POSTGRES_DB"),)
+    print(os.getenv("POSTGRES_USERNAME"))
     db = context_storage_factory(db_uri)
 
     pipeline = Pipeline.from_script(
