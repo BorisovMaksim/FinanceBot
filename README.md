@@ -6,8 +6,8 @@
 
 <div align="center">
     
-  <a href="https://github.com/itmo-bootcamp/itmo-bootcamp-2023/issues">![GitHub issues](https://img.shields.io/github/issues//BorisovMaksim/FinanceBot)</a>
-  <a href="https://github.com/itmo-bootcamp/itmo-bootcamp-2023/blob/master/LICENSE">![GitHub license](https://img.shields.io/github/license/BorisovMaksim/FinanceBot?color=purple)</a>
+  <a href="https://github.com/BorisovMaksim/FinanceBot/issues">![GitHub issues](https://img.shields.io/github/issues//BorisovMaksim/FinanceBot)</a>
+  <a href="https://github.com/BorisovMaksim/FinanceBot/master/LICENSE">![GitHub license](https://img.shields.io/github/license/BorisovMaksim/FinanceBot?color=purple)</a>
   <a href="https://www.python.org/dev/peps/pep-0008/">![Code style](https://img.shields.io/badge/code%20style-pep8-orange.svg)</a>
 
 </div>
