@@ -10,9 +10,6 @@ from pipeline_services.ner_service import get_company_name
 from pipeline_services.parsers import get_last_price_tinkoff
 
 
-
-
-
 def question_processor(ctx: Context):
     """Store questions similar to user's query in the `annotations` field of a message."""
     last_request = ctx.last_request
@@ -30,12 +27,17 @@ def question_processor(ctx: Context):
             similar_questions = find_similar_questions(last_request.text)
             print(f"{last_request.text=}")
             print(f"{similar_questions=}")
-            if len(similar_questions) > 0 and similar_questions[0] ==  'Сколько стоит акция компании?':
+            if (
+                len(similar_questions) > 0
+                and similar_questions[0] == "Сколько стоит акция компании?"
+            ):
                 company_name = get_company_name(last_request.text)
                 price = get_last_price_tinkoff(company_name)
-                last_request.annotations["answer"] = f"Цена акции {company_name} = {price}"
+                last_request.annotations[
+                    "answer"
+                ] = f"Цена акции {company_name} = {price}"
             last_request.annotations["similar_questions"] = similar_questions
-            
+
     ctx.last_request = last_request
 
 
