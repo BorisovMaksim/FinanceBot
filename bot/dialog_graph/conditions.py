@@ -19,7 +19,9 @@ def received_text(ctx: Context, _: Pipeline):
 
 def received_button_click(ctx: Context, _: Pipeline):
     """Return true if the last update from user is a button press."""
-    if ctx.validation:  # Regular `Message` doesn't have `callback_query` field, so this fails during validation
+    if (
+        ctx.validation
+    ):  # Regular `Message` doesn't have `callback_query` field, so this fails during validation
         return False
     last_request = cast(TelegramMessage, ctx.last_request)
 

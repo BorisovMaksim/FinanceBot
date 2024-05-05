@@ -13,11 +13,21 @@ from .conditions import received_button_click, received_text
 script = {
     "service_flow": {
         "start_node": {
-            TRANSITIONS: {("qa_flow", "welcome_node"): cnd.exact_match(TelegramMessage(text="/start"))},
+            TRANSITIONS: {
+                ("qa_flow", "welcome_node"): cnd.exact_match(
+                    TelegramMessage(text="/start")
+                )
+            },
         },
         "fallback_node": {
-            RESPONSE: TelegramMessage(text="Something went wrong. Use `/restart` to start over."),
-            TRANSITIONS: {("qa_flow", "welcome_node"): cnd.exact_match(TelegramMessage(text="/restart"))},
+            RESPONSE: TelegramMessage(
+                text="Something went wrong. Use `/restart` to start over."
+            ),
+            TRANSITIONS: {
+                ("qa_flow", "welcome_node"): cnd.exact_match(
+                    TelegramMessage(text="/restart")
+                )
+            },
         },
     },
     "qa_flow": {
@@ -32,7 +42,11 @@ script = {
         },
         "answer_question": {
             RESPONSE: answer_question,
-            TRANSITIONS: {("qa_flow", "welcome_node"): cnd.exact_match(TelegramMessage(text="/restart"))},
+            TRANSITIONS: {
+                ("qa_flow", "welcome_node"): cnd.exact_match(
+                    TelegramMessage(text="/restart")
+                )
+            },
         },
         # "answer_question": {
         #     RESPONSE: answer_question,

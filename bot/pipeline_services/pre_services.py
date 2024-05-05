@@ -11,9 +11,6 @@ from pipeline_services.parsers import get_last_price_tinkoff
 from pipeline_services.toxic_classifier import is_toxic
 
 
-
-
-
 def question_processor(ctx: Context):
     """Store questions similar to user's query in the `annotations` field of a message."""
     last_request = ctx.last_request
