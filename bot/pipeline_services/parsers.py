@@ -27,7 +27,6 @@ def get_last_price_yahoo(query):
         ticker = yq.Ticker(symbol)
         price = ticker.summary_detail[symbol]["bid"]
         return price, exchange
-<<<<<<< HEAD
     
     
 def get_all_companies_names():
@@ -51,25 +50,6 @@ def get_last_price_tinkoff(query):
                             
                 
 if __name__ == '__main__':
-=======
-
-
-def get_last_price_tinkoff(query):
-    with Client(TOKEN) as client:
-        shares = client.instruments.find_instrument(
-            query=query, instrument_kind=InstrumentType.INSTRUMENT_TYPE_SHARE
-        ).instruments
-        for share in shares:
-            last_prices = client.market_data.get_last_prices(
-                figi=[share.figi]
-            ).last_prices[0]
-            if last_prices.price.units != 0:
-                price = float(f"{last_prices.price.units}.{last_prices.price.nano}")
-                return price
-
-
-if __name__ == "__main__":
->>>>>>> 0fea0f1162dae6f5a211dd250d7e63f5effc93a7
     query = "Яндекс"
     price, _ = get_last_price_tinkoff(query)
     print(query, price)

@@ -13,7 +13,7 @@ SP = "Ты финансовый ассистент. Ты любишь дават
 
 GENERATION_CONFIG = GenerationConfig.from_pretrained(MODEL_NAME)
 
-DEVICE = "cuda:2"
+DEVICE = "cuda:0"
 
 
 def generate(model, tokenizer, prompt):
