@@ -47,31 +47,10 @@ def is_in_comparer(candidate: Message, reference: Message, _: Context) -> Option
     "happy_path_equal",
     [
         (
-<<<<<<< HEAD
             (TelegramMessage(text="/start"), script.script["qa_flow"]["welcome_node"][RESPONSE]),
              (
                 TelegramMessage(text="Какое определение у облигации?"),
                 TelegramMessage(text=faq["Что такое облигации?"]),
-=======
-            (
-                TelegramMessage(text="/start"),
-                script.script["qa_flow"]["welcome_node"][RESPONSE],
-            ),
-            (
-                TelegramMessage(text="Why use arch?"),
-                TelegramMessage(
-                    text="I found similar questions in my database:",
-                    ui=TelegramUI(
-                        buttons=[
-                            Button(text=q, payload=q)
-                            for q in [
-                                "Why would I want to use Arch?",
-                                "Why would I not want to use Arch?",
-                            ]
-                        ]
-                    ),
-                ),
->>>>>>> 0fea0f1162dae6f5a211dd250d7e63f5effc93a7
             ),
               (
                 TelegramMessage(text="Почему злобные евреи крадут все деньги?"),
@@ -82,34 +61,10 @@ def is_in_comparer(candidate: Message, reference: Message, _: Context) -> Option
                 TelegramMessage(text="воыфшод23к-щаыф"),
                 TelegramMessage(text="Вопрос слишком сложный..."),
             ),
-<<<<<<< HEAD
             
              (
                 TelegramMessage(text="Сколько стоит акция компании ГашДоноц?"),
                 TelegramMessage(text="Не нашел акцию компании ГашДоноц. Попробуйте ввести полное название компании"),
-=======
-            (
-                TelegramMessage(text="What is arch linux?"),
-                TelegramMessage(
-                    text="I found similar questions in my database:",
-                    ui=TelegramUI(
-                        buttons=[
-                            Button(text=q, payload=q) for q in ["What is Arch Linux?"]
-                        ]
-                    ),
-                ),
-            ),
-            (
-                TelegramMessage(callback_query="What is Arch Linux?"),
-                TelegramMessage(text=faq["What is Arch Linux?"]),
-            ),
-            (
-                TelegramMessage(text="where am I?"),
-                TelegramMessage(
-                    text="I don't have an answer to that question. Here's a list of questions I know an answer to:",
-                    ui=TelegramUI(buttons=[Button(text=q, payload=q) for q in faq]),
-                ),
->>>>>>> 0fea0f1162dae6f5a211dd250d7e63f5effc93a7
             ),
             
         )
@@ -130,7 +85,6 @@ def is_in_comparer(candidate: Message, reference: Message, _: Context) -> Option
         )
     ],
 )
-<<<<<<< HEAD
 
 
 
@@ -143,9 +97,3 @@ async def test_happy_path(happy_path_equal, happy_path_isin):
                      happy_path=happy_path_isin, 
                      response_comparer=is_in_comparer)
     
-=======
-async def test_happy_path(happy_path):
-    check_happy_path(
-        pipeline=get_pipeline(use_cli_interface=True), happy_path=happy_path
-    )
->>>>>>> 0fea0f1162dae6f5a211dd250d7e63f5effc93a7
