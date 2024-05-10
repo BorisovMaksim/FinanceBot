@@ -27,6 +27,8 @@ def answer_question(ctx: Context, _: Pipeline):
         raise RuntimeError("No last requests.")
     if last_request.annotations is None:
         raise RuntimeError("No annotations.")
+    if last_request.is_toxic:
+        return TelegramMessage(text="Ваше сообщение содержит недопустимый контент. Пожалуйста, переформулируйте запрос", parse_mode=ParseMode.HTML)
     similar_questions = last_request.annotations.get("similar_questions")
     if similar_questions is None:
         raise RuntimeError("Last request has no text.")

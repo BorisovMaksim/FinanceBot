@@ -13,7 +13,7 @@ SP = """Ты умный ассистент которого зовут Фина�
 
 MODEL_NAME = "IlyaGusev/saiga2_7b_lora"
 
-DEVICE = "cuda:2"
+DEVICE = "cuda:0"
 
 
 def create_nodes():
@@ -51,7 +51,7 @@ def init_model():
     llm = HuggingFaceLLM(
         model=llm,
         tokenizer=tokenizer,
-        context_window=4096,
+        context_window=4096,    
         max_new_tokens=256,
         generate_kwargs={"temperature": 0.3, "do_sample": True},
         query_wrapper_prompt=PROMT,
