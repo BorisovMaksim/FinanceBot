@@ -2,7 +2,7 @@ from peft import PeftModel, PeftConfig
 from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
 import torch
 
-
+ 
 MODEL_NAME = "IlyaGusev/saiga2_7b_lora"
 
 DEFAULT_MESSAGE_TEMPLATE = "<s>{role}\n{content}</s>"
@@ -16,6 +16,19 @@ GENERATION_CONFIG = GenerationConfig.from_pretrained(MODEL_NAME)
 DEVICE = "cuda:0"
 
 
+def init_model():
+    config = PeftConfig.from_pretrained(MODEL_NAME)
+    llm = AutoModelForCausalLM.from_pretrained(
+            config.base_model_name_or_path,
+            torch_dtype=torch.float16,
+            load_in_8bit=True,
+            device_map="cuda:0",
+        )
+    llm = PeftModel.from_pretrained(llm, MODEL_NAME, torch_dtype=torch.float16)
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, use_fast=False)
+    return llm, tokenizer
+
+
 def generate(model, tokenizer, prompt):
     data = tokenizer(prompt, return_tensors="pt")
     data = {k: v.to(DEVICE) for k, v in data.items()}
@@ -25,7 +38,7 @@ def generate(model, tokenizer, prompt):
     return output.strip()
 
 
-def get_prompt(tokenizer, messages):
+def get_prompt(messages):
     final_text = ""
     for message in messages:
         message_text = DEFAULT_MESSAGE_TEMPLATE.format(**message)
@@ -36,13 +49,14 @@ def get_prompt(tokenizer, messages):
 
 def response(prompt, llm, tokenizer):
     messages = [{"role": "system", "content": SP, "role": "user", "content": prompt}]
-    prompt = get_prompt(tokenizer, messages)
-    # torch.cuda.empty_cache()
+    prompt = get_prompt(messages)
     output = generate(llm, tokenizer, prompt)
     return output
 
 
 def risk_profile(
+    llm,
+    tokenizer, 
     invest_goals,
     duration,
     funds_volume,
@@ -58,16 +72,18 @@ def risk_profile(
     debt_obligation,
     age,
 ):
-    prompt = f"Выбери один из трех типов (консервативный, умеренный, агрессивный) риск-профиля для конкретного инвестора по следущим критериям: цели инвестирования - {invest_goals}, \
-    срок инвестирования - {duration}, объем финансовых активовов для инвестирования - {funds_volume}, планируется ли использовать инвестируемые средства для финансирования ежедневных \
-    расходов - {daily_expenses}, готовность принимать более высокий риск для достижения более высокого потенциального прироста - {is_risky}, наличие опыта в качестве инвестора - {invest_experience}, \
-    готовность к возможности снижения инвестиционного капитала - {capital_reduction}, вероятность изъятия большей части или всей инвестированной суммы досрочно, \
-    до истечения предполагаемого срока инвестиций - {early_withdrawal}, наличие резервного фонда - {reserve_fund}, владение частной собственностью - {private_property}, \
-    планируемый срок выхода на пассивный доход/пенсию - {retirement}, сумма ежемесячной разницы между доходами и расходами - {monthly_income_expenses}, \
-    долговые обязательства - {debt_obligation}, возраст инвестора - {age}"
+    prompt = f"Есть риск-профиль для конкретного инвестора со следущими критериям: цели инвестирования - {invest_goals}, \
+    срок инвестирования - {duration} лет, объем финансовых активовов для инвестирования - {funds_volume} рублей, планируется ли использовать \
+    инвестируемые средства для финансирования ежедневных \
+    расходов - {daily_expenses}, есть ли готовность принимать более высокий риск для достижения более высокого потенциального прироста - {is_risky}, \
+    наличие опыта в качестве инвестора - {invest_experience}, \
+    есть ли готовность к возможности снижения инвестиционного капитала - {capital_reduction}, вероятность изъятия большей части или всей инвестированной суммы досрочно, \
+    до истечения предполагаемого срока инвестиций - {early_withdrawal}, есть ли резервный фонд - {reserve_fund}, владение частной собственностью - {private_property}, \
+    планируемый срок выхода на пассивный доход/пенсию - {retirement} лет, сумма ежемесячной разницы между доходами и расходами - {monthly_income_expenses} рублей, \
+    долговые обязательства - {debt_obligation}, возраст инвестора - {age}. Это рискованный, консервативный или умеренный риск-профиль?  Объясни свой выбор."
 
-    return response(prompt)
-
+    return response(prompt, llm, tokenizer)
+ 
 
 if __name__ == "__main__":
     print(
@@ -88,3 +104,4 @@ if __name__ == "__main__":
             "25 лет",
         )
     )
+ 
